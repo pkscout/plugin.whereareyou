@@ -1,0 +1,21 @@
+<addon id="plugin.whereareyou" name="Where Are You" provider-name="pkscout" version="0.0.1">
+	<requires>
+		<import addon="xbmc.python" version="2.19.0" />
+		<import addon="xbmc.addon" version="15.0.0" />
+	</requires>
+	<extension library="default.py" point="xbmc.python.script">
+		<provides>executable</provides>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<news>
+v.0.0.1
+- initial release
+		</news>
+		<summary lang="en_GB">Download images and additional info of the currently playing artist</summary>
+		<description lang="en_GB">Addon to download images and additional information from fanart.tv and theaudiodb.com of the currently playing artist. The images, along with local artists' images, and info can be used by the skin to create a slideshow for the artist being listened to.</description>
+		<language />
+		<platform>all</platform>
+		<license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
+		<source>https://github.com/pkscout/script.artistslideshow</source>
+	</extension>
+</addon>
