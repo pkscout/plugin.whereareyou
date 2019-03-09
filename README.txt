@@ -7,3 +7,5 @@ plugin://plugin.whereareyou?empty=pad&title=Available+streaming&message=This+is+
 I also wrote a little python3 command line tool to generate either media stub or stream files for things that you want in your library but are available on other devices (for me this is stuff like Netflix that I get by using an app on my TV rather than using Kodi).  That command line tool is available at:
 
 https://github.com/pkscout/create.kodi.mediastubs
+
+The icon is Compass by Diane from the Noun Project.
