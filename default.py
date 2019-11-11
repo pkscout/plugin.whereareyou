@@ -2,48 +2,54 @@
 # *
 # *  original Where Are You code by pkscout
 
-import xbmc, xbmcaddon, xbmcgui, xbmcplugin
+from kodi_six import xbmc, xbmcaddon, xbmcgui, xbmcplugin
+from kodi_six.utils import py2_decode
 import os, sys, urllib
-from resources.common.fix_utf8 import smartUTF8
 from resources.common.xlogger import Logger
 
 addon        = xbmcaddon.Addon()
 addonname    = addon.getAddonInfo('id')
 addonversion = addon.getAddonInfo('version')
-addonpath    = addon.getAddonInfo('path').decode('utf-8')
+addonpath    = addon.getAddonInfo('path')
 addonicon    = xbmc.translatePath('%s/icon.png' % addonpath )
 language     = addon.getLocalizedString
 preamble     = '[Where Are You]'
 
-lw      = Logger( preamble=preamble, logdebug='True' )
+lw = Logger( preamble=preamble, logdebug='True' )
 
 class Main:
 
     def __init__( self ):
         self._parse_argv()
-        dialog = xbmcgui.Dialog()
-        ok = dialog.ok( self.TITLE, self.MESSAGE )
-        self.play_video( os.path.join( addonpath, 'resources', 'blank.mp4' ) )
+        if self.TITLE and self.MESSAGE:
+            dialog = xbmcgui.Dialog()
+            ok = dialog.ok( self.TITLE, self.MESSAGE )
+            self.play_video( os.path.join( addonpath, 'resources', 'blank.mp4' ) )
+        else:
+            lw.log( ['One or both of title ("%s") and message ("%s") not set.' % (self.TITLE, self.MESSAGE)] )
 
 
     def _parse_argv( self ):
         try:
-            params = dict( arg.split( "=" ) for arg in sys.argv[ 2 ].split( "&" ) )
+            params = dict( arg.split( "=" ) for arg in sys.argv[2].split( "&" ) )
         except IndexError:
             params = {}        
         except Exception as e:
             lw.log( ['unexpected error while parsing arguments', e] )
             params = {}
-        self.TITLE = urllib.unquote_plus( params.get( 'title', '') ).decode( 'utf8' )
-        self.MESSAGE = urllib.unquote_plus( params.get( 'message', '') ).decode( 'utf8' )
+        self.TITLE = py2_decode( urllib.unquote_plus( params.get( 'title', '') ) )
+        self.MESSAGE = py2_decode( urllib.unquote_plus( params.get( 'message', '') ) )
 
 
     def play_video( self, path ):
         play_item = xbmcgui.ListItem( path=path )
-        xbmcplugin.setResolvedUrl( int(sys.argv[1]), True, listitem=play_item )
+        try:
+            xbmcplugin.setResolvedUrl( int( sys.argv[1] ), True, listitem=play_item )
+        except IndexError:
+            return
 
 
 if ( __name__ == "__main__" ):
     lw.log( ['script version %s started' % addonversion], xbmc.LOGNOTICE )
-    slideshow = Main()
+    action = Main()
 lw.log( ['script stopped'], xbmc.LOGNOTICE )
