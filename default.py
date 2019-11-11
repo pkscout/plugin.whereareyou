@@ -4,7 +4,11 @@
 
 from kodi_six import xbmc, xbmcaddon, xbmcgui, xbmcplugin
 from kodi_six.utils import py2_decode
-import os, sys, urllib
+import os, sys
+try:
+    from urllib.parse import unquote_plus as _unquote_plus
+except ImportError:
+    from urllib import unquote_plus as _unquote_plus
 from resources.common.xlogger import Logger
 
 addon        = xbmcaddon.Addon()
@@ -37,8 +41,8 @@ class Main:
         except Exception as e:
             lw.log( ['unexpected error while parsing arguments', e] )
             params = {}
-        self.TITLE = py2_decode( urllib.unquote_plus( params.get( 'title', '') ) )
-        self.MESSAGE = py2_decode( urllib.unquote_plus( params.get( 'message', '') ) )
+        self.TITLE = py2_decode( _unquote_plus( params.get( 'title', '') ) )
+        self.MESSAGE = py2_decode( _unquote_plus( params.get( 'message', '') ) )
 
 
     def play_video( self, path ):
