@@ -1,7 +1,7 @@
-<addon id="plugin.whereareyou" name="Where Are You" provider-name="pkscout" version="0.1.0">
+<addon id="plugin.whereareyou" name="Where Are You" provider-name="pkscout" version="0.1.1">
 	<requires>
-		<import addon="xbmc.python" version="2.26.0" />
-		<import addon="xbmc.addon" version="17.9.910" />
+		<import addon="xbmc.python" version="2.25.0" />
+		<import addon="xbmc.addon" version="17.0.0" />
 		<import addon="script.module.kodi-six" version="0.0.3" />
         <import addon="script.module.future" version="0.16.0.4" />
 	</requires>
@@ -10,7 +10,7 @@
 	</extension>
 	<extension point="xbmc.addon.metadata">
 		<news>
-v.0.1.0
+v.0.1.1
 - Python 2/3 compatibility
 		</news>
 		<summary lang="en_GB">Hacky module to display a custom dialog box when playing external media.</summary>
