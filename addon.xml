@@ -5,7 +5,7 @@
 		<import addon="script.module.kodi-six" version="0.0.3" />
         <import addon="script.module.future" version="0.16.0.4" />
 	</requires>
-	<extension library="default.py" point="xbmc.python.script">
+	<extension library="default.py" point="xbmc.python.plugin">
 		<provides>executable</provides>
 	</extension>
 	<extension point="xbmc.addon.metadata">
@@ -13,8 +13,11 @@
 v.0.1.1
 - Python 2/3 compatibility
 		</news>
-		<summary lang="en_GB">Hacky module to display a custom dialog box when playing external media.</summary>
-		<description lang="en_GB">Where Are You is a hacky module for Kodi that accepts a URL from a stream file and then displays a dialog box with the title and message from the stream file URL.  After the dialog is dismissed a black video plays for 2 seconds.  This is basically to do what the media stub file *should* do, which is display a title and a message for a given file, but the media stub only works if you have an optical drive attached to the device running Kodi.
+		<assets>
+        	<icon>icon.png</icon>
+        </assets>
+		<summary lang="en_GB">Plugin module to display a custom dialog box when playing external media.</summary>
+		<description lang="en_GB">Where Are You is a module for Kodi that accepts a URL from a stream file and then displays a dialog box with the title and message from the stream file URL.  After the dialog is dismissed a black video plays for 2 seconds.  This is basically to do what the media stub file *should* do, which is display a title and a message for a given file, but the media stub only works if you have an optical drive attached to the device running Kodi.
 </description>
 		<language />
 		<platform>all</platform>
