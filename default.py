@@ -54,6 +54,6 @@ class Main:
 
 
 if ( __name__ == "__main__" ):
-    lw.log( ['script version %s started' % addonversion], xbmc.LOGNOTICE )
+    lw.log( ['script version %s started' % addonversion], xbmc.LOGINFO )
     action = Main()
-lw.log( ['script stopped'], xbmc.LOGNOTICE )
+lw.log( ['script stopped'], xbmc.LOGINFO )

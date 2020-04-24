@@ -1,17 +1,16 @@
-<addon id="plugin.whereareyou" name="Where Are You" provider-name="pkscout" version="0.1.1">
+<addon id="plugin.whereareyou" name="Where Are You" provider-name="pkscout" version="0.1.2~beta1">
 	<requires>
-		<import addon="xbmc.python" version="2.25.0" />
-		<import addon="xbmc.addon" version="17.0.0" />
+		<import addon="xbmc.python" version="2.26.0" />
 		<import addon="script.module.kodi-six" version="0.0.3" />
-        <import addon="script.module.future" version="0.16.0.4" />
+		<import addon="script.module.future" version="0.16.0.4" />
 	</requires>
 	<extension library="default.py" point="xbmc.python.plugin">
 		<provides>executable</provides>
 	</extension>
 	<extension point="xbmc.addon.metadata">
 		<news>
-v.0.1.1
-- Python 2/3 compatibility
+v.0.1.2~beta1
+- changing in logging to accomodate new logging requirements for Kodi 19
 		</news>
 		<assets>
         	<icon>icon.png</icon>
