@@ -3,13 +3,14 @@
 		<import addon="xbmc.python" version="2.26.0" />
 		<import addon="script.module.kodi-six" version="0.0.3" />
 	</requires>
-	<extension library="default.py" point="xbmc.python.plugin">
+	<extension library="default.py" point="xbmc.python.pluginsource">
 		<provides>executable</provides>
 	</extension>
 	<extension point="xbmc.addon.metadata">
 		<news>
 v.0.2.0~beta1
 - changes in logging to accomodate new logging requirements for Kodi 19
+- reorganized code for submission to Kodi repo
 		</news>
 		<assets>
         	<icon>icon.png</icon>
