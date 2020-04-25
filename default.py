@@ -1,7 +1,3 @@
-# *  Credits:
-# *
-# *  original Where Are You code by pkscout
-
 from kodi_six import xbmc, xbmcaddon
 from resources.lib.whereareyou import Main
 
