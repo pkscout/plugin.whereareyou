@@ -20,6 +20,7 @@ v.0.2.0
 		<language />
 		<platform>all</platform>
 		<license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
+		<forum>https://forum.kodi.tv/showthread.php?tid=353924</forum>
 		<source>https://github.com/pkscout/plugin.whereareyou</source>
 	</extension>
 </addon>
