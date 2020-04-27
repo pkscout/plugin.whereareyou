@@ -2,7 +2,7 @@
 
 ## About
 
-Where Are You is a Kodi addon that uses a custom URL from a stream file to display a dialog box with the title and message from the stream file URL.  After the dialog is dismissed a black video plays for 2 seconds.  This is basically to do what the media stub file **should** do, which is display a title and a message for a given file, but the media stub only works if you have an optical drive attached to the device running Kodi.
+Where Are You is a plugin for Kodi that accepts a URL from a stream file and then displays a dialog box with the title and message from the stream file URL.  After the dialog is dismissed a black video plays for 2 seconds.  This is basically to do what the media stub file does (which is display a title and a message for a given file), but for streaming files because the media stub only works if you have an optical drive attached to the device running Kodi.
 
 ## Usage
 

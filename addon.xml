@@ -1,4 +1,4 @@
-<addon id="plugin.whereareyou" name="Where Are You" provider-name="pkscout" version="0.2.0~beta1">
+<addon id="plugin.whereareyou" name="Where Are You" provider-name="pkscout" version="0.2.0">
 	<requires>
 		<import addon="xbmc.python" version="2.26.0" />
 		<import addon="script.module.kodi-six" version="0.0.3" />
@@ -8,15 +8,14 @@
 	</extension>
 	<extension point="xbmc.addon.metadata">
 		<news>
-v.0.2.0~beta1
-- changes in logging to accomodate new logging requirements for Kodi 19
-- reorganized code for submission to Kodi repo
+v.0.2.0
+- initial public version
 		</news>
 		<assets>
         	<icon>icon.png</icon>
         </assets>
 		<summary lang="en_GB">Plugin module to display a custom dialog box when playing external media.</summary>
-		<description lang="en_GB">Where Are You is a module for Kodi that accepts a URL from a stream file and then displays a dialog box with the title and message from the stream file URL.  After the dialog is dismissed a black video plays for 2 seconds.  This is basically to do what the media stub file *should* do, which is display a title and a message for a given file, but the media stub only works if you have an optical drive attached to the device running Kodi.
+		<description lang="en_GB">Where Are You is a plugin for Kodi that accepts a URL from a stream file and then displays a dialog box with the title and message from the stream file URL.  After the dialog is dismissed a black video plays for 2 seconds.  This is basically to do what the media stub file does (which is display a title and a message for a given file), but for streaming files because the media stub only works if you have an optical drive attached to the device running Kodi.
 </description>
 		<language />
 		<platform>all</platform>
