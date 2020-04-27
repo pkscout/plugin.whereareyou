@@ -29,7 +29,7 @@ Place the stream file in a location you have defined as a source and then scan t
 
 I also wrote a little python3 command line tool to generate the stream files.  That command line tool is available at:
 
-<https://github.com/pkscout/create.kodi.mediastubs>
+<https://github.com/pkscout/create.kodi.mediastubs/releases/>
 
 ## Credits
 
