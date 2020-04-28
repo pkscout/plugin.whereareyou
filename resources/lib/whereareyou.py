@@ -32,7 +32,7 @@ class Main:
         try:
             params = dict( arg.split( "=" ) for arg in sys.argv[2].split( "&" ) )
         except IndexError:
-            params = {}        
+            params = {}
         except Exception as e:
             xbmc.log( '%s unexpected error while parsing arguments %s' % (preamble, e), xbmc.LOGWARNING )
             params = {}
