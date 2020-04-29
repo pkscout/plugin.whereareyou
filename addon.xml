@@ -1,4 +1,4 @@
-<addon id="plugin.whereareyou" name="Where Are You" provider-name="pkscout" version="0.2.0">
+<addon id="plugin.whereareyou" name="Where Are You" provider-name="pkscout" version="0.2.1">
 	<requires>
 		<import addon="xbmc.python" version="2.26.0" />
 		<import addon="script.module.kodi-six" version="0.0.3" />
@@ -8,8 +8,8 @@
 	</extension>
 	<extension point="xbmc.addon.metadata">
 		<news>
-v.0.2.0
-- initial public version
+v.0.2.1
+- initial public version (with bump for resubmission to repo-plugins)
 		</news>
 		<assets>
 			<icon>icon.png</icon>
