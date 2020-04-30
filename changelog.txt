@@ -1,3 +1,6 @@
+v.0.2.2~beta1
+- code refactoring
+
 v.0.2.1
 - version bump for resubmission to repo-plugins
 

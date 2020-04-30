@@ -19,6 +19,7 @@ preamble     = '[Where Are You]'
 class Main:
 
     def __init__( self ):
+        xbmc.log( '%s script version %s started' % (preamble, addonversion), xbmc.LOGINFO )
         self._parse_argv()
         if self.TITLE and self.MESSAGE:
             dialog = xbmcgui.Dialog()
@@ -26,6 +27,7 @@ class Main:
             self.play_video( os.path.join( addonpath, 'resources', 'blank.mp4' ) )
         else:
             xbmc.log( '%s One or both of title ("%s") and message ("%s") not set.' % (preamble, self.TITLE, self.MESSAGE), xbmc.LOGWARNING )
+        xbmc.log( '%s script stopped' % preamble, xbmc.LOGINFO )
 
 
     def _parse_argv( self ):
