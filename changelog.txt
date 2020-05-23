@@ -1,3 +1,6 @@
+v.0.2.2~beta2
+- fix for looping dialog box if called from home window
+
 v.0.2.2~beta1
 - code refactoring
 

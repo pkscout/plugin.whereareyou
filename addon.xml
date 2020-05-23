@@ -1,4 +1,4 @@
-<addon id="plugin.whereareyou" name="Where Are You" provider-name="pkscout" version="0.2.2~beta1">
+<addon id="plugin.whereareyou" name="Where Are You" provider-name="pkscout" version="0.2.2~beta2">
 	<requires>
 		<import addon="xbmc.python" version="2.26.0" />
 		<import addon="script.module.kodi-six" version="0.0.3" />
@@ -8,6 +8,8 @@
 	</extension>
 	<extension point="xbmc.addon.metadata">
 		<news>
+v.0.2.2~beta2
+- fix for looping dialog box if called from home screen
 v.0.2.2~beta1
 - code refactoring
 		</news>

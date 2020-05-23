@@ -43,8 +43,9 @@ class Main:
 
 
     def play_video( self, path ):
-        play_item = xbmcgui.ListItem( path=path )
-        try:
-            xbmcplugin.setResolvedUrl( int( sys.argv[1] ), True, listitem=play_item )
-        except IndexError:
-            return
+        xbmc.Player().play( path )
+#        play_item = xbmcgui.ListItem( path=path )
+#        try:
+#            xbmcplugin.setResolvedUrl( handle=int( sys.argv[1] ), succeeded=True, listitem=play_item )
+#        except IndexError:
+#            return
