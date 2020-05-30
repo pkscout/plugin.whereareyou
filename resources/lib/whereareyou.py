@@ -30,6 +30,7 @@ class Main:
         xbmc.log( '%s script stopped' % preamble, xbmc.LOGINFO )
 
 
+
     def _parse_argv( self ):
         try:
             params = dict( arg.split( "=" ) for arg in sys.argv[2].split( "&" ) )
@@ -43,9 +44,9 @@ class Main:
 
 
     def play_video( self, path ):
-        xbmc.Player().play( path )
-#        play_item = xbmcgui.ListItem( path=path )
-#        try:
-#            xbmcplugin.setResolvedUrl( handle=int( sys.argv[1] ), succeeded=True, listitem=play_item )
-#        except IndexError:
-#            return
+        play_item = xbmcgui.ListItem( path=path )
+        try:
+            xbmcplugin.setResolvedUrl( handle=int( sys.argv[1] ), succeeded=True, listitem=play_item )
+        except IndexError:
+            return
+        xbmc.Player().stop()
