@@ -1,4 +1,4 @@
-from kodi_six import xbmc, xbmcaddon, xbmcgui, xbmcplugin
+from kodi_six import xbmc, xbmcaddon, xbmcgui
 from kodi_six.utils import py2_decode
 import os, sys
 try:
@@ -44,8 +44,3 @@ class Main:
 
     def play_video( self, path ):
         xbmc.Player().play( path )
-#        play_item = xbmcgui.ListItem( path=path )
-#        try:
-#            xbmcplugin.setResolvedUrl( handle=int( sys.argv[1] ), succeeded=True, listitem=play_item )
-#        except IndexError:
-#            return
