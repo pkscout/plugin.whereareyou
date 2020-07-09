@@ -1,0 +1,68 @@
+# plugin.whereareyou language file
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+
+#: Settings Heading
+msgctxt "#32000"
+msgid "General"
+msgstr ""
+
+#: Settings
+msgctxt "#32100"
+msgid "Enable debug logging"
+msgstr ""
+
+#: Settings
+msgctxt "#32101"
+msgid "Edit addon mappings"
+msgstr ""
+
+#: Dialog Heading
+msgctxt "#32200"
+msgid "Select action"
+msgstr ""
+
+#: Dialog Heading
+msgctxt "#32201"
+msgid "Title string match"
+msgstr ""
+
+#: Dialog Heading
+msgctxt "#32202"
+msgid "Select addon to launch"
+msgstr ""
+
+#: Dialog Heading
+msgctxt "#32203"
+msgid "Additional addon arguments"
+msgstr ""
+
+#: Dialog Heading
+msgctxt "#32204"
+msgid "Select mapping"
+msgstr ""
+
+#: Dialog
+msgctxt "#32300"
+msgid "Add mapping"
+msgstr ""
+
+#: Dialog
+msgctxt "#32301"
+msgid "Edit mapping"
+msgstr ""
+
+#: Dialog
+msgctxt "#32302"
+msgid "Delete mapping"
+msgstr ""
+
+#: Dialog
+msgctxt "#32303"
+msgid "Would you like to open the app?"
+msgstr ""
+
+
