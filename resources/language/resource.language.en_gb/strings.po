@@ -17,7 +17,17 @@ msgstr ""
 
 #: Settings
 msgctxt "#32101"
-msgid "Edit addon mappings"
+msgid "Edit mappings"
+msgstr ""
+
+#: Settings
+msgctxt "#32102"
+msgid "Enable Harmony hub control"
+msgstr ""
+
+#: Settings
+msgctxt "#32103"
+msgid "Harmony hub IP address"
 msgstr ""
 
 #: Dialog Heading
@@ -27,7 +37,7 @@ msgstr ""
 
 #: Dialog Heading
 msgctxt "#32201"
-msgid "Title string match"
+msgid "Title or message string to match"
 msgstr ""
 
 #: Dialog Heading
@@ -37,7 +47,7 @@ msgstr ""
 
 #: Dialog Heading
 msgctxt "#32203"
-msgid "Additional addon arguments"
+msgid "Harmony activity to launch"
 msgstr ""
 
 #: Dialog Heading

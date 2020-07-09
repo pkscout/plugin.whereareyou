@@ -2,6 +2,8 @@
 from resources.lib.kodisettings import *
 
 SETTINGSLIST = [ {'name': 'mappings', 'default': ''},
+                 {'name': 'harmonycontrol', 'default': False},
+                 {'name': 'hub_ip', 'default': ''},
                  {'name': 'debug', 'default': False}
                ]
 
