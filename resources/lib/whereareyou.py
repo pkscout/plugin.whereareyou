@@ -1,7 +1,6 @@
 from kodi_six import xbmc, xbmcgui
 from kodi_six.utils import py2_decode
 import json, os, sys
-from resources.lib import waydialog
 from resources.lib.waysettings import loadSettings
 from resources.lib.xlogger import Logger
 from resources.lib.api.harmony import HubControl
@@ -9,6 +8,12 @@ try:
     from urllib.parse import unquote_plus as _unquote_plus
 except ImportError:
     from urllib import unquote_plus as _unquote_plus
+
+def _upgrade():
+    settings = loadSettings()
+    if settings['version_upgrade'] != settings['ADDONVERSION']:
+        settings['ADDON'].setSetting( 'version_upgrade', settings['ADDONVERSION'] )
+
 
 
 class Main:
@@ -18,13 +23,12 @@ class Main:
         self.LW = Logger( preamble='[Where Are You]', logdebug=self.SETTINGS['debug'] )
         self.LW.log( ['script version %s started' % self.SETTINGS['ADDONVERSION']], xbmc.LOGINFO )
         self._parse_argv()
-        if self.DOMAPPING:
-            self._mappings_options()
-            self.SETTINGS['ADDON'].openSettings()
-        elif self.TITLE and self.MESSAGE:
+        if self.TITLE and self.MESSAGE:
             self._display_dialog()
-        else:
-            self._pick_activity()
+        elif self.SETTINGS['harmonycontrol']:
+            self._mappings_options()
+            if self.FROMSETTINGS:
+                self.SETTINGS['ADDON'].openSettings()    
         self.LW.log( ['script stopped'], xbmc.LOGINFO )
 
 
@@ -135,13 +139,15 @@ class Main:
 
     def _parse_argv( self ):
         try:
-            check_mapping = sys.argv[1]
+            check_from = sys.argv[1]
         except IndexError:
-            check_mapping = ''
-        if check_mapping == 'domapping':
-            self.DOMAPPING = True
+            check_from = ''
+        if check_from == 'fromsettings':
+            self.FROMSETTINGS = True
+            self.TITLE = ''
+            self.MESSAGE = ''
             return
-        self.DOMAPPING = False
+        self.FROMSETTINGS = False
         try:
             params = dict( arg.split( "=" ) for arg in sys.argv[2].split( "&" ) )
         except IndexError:
@@ -151,17 +157,6 @@ class Main:
             params = {}
         self.TITLE = py2_decode( _unquote_plus( params.get( 'title', '') ) )
         self.MESSAGE = py2_decode( _unquote_plus( params.get( 'message', '') ) )
-
-
-    def _pick_activity( self ):
-        saved_mappings, json_mappings = self._get_mappings()
-        dialog_return, loglines = waydialog.Dialog().start( self.SETTINGS, title=self.SETTINGS['ADDONLANGUAGE']( 32205 ),
-                                                           buttons=saved_mappings )
-        self.LW.log( loglines )
-        if dialog_return == None:
-            return
-        activity, cmds = self._get_mapping_details( json_mappings, saved_mappings[dialog_return] )
-        self._run_activity( activity, cmds )
 
 
     def _run_activity( self, activity, cmds ):

@@ -32,21 +32,11 @@ msgstr ""
 
 #: Settings
 msgctxt "#32104"
-msgid "Use custom select menu"
-msgstr ""
-
-#: Settings
-msgctxt "#32105"
-msgid "Include skin mods"
-msgstr ""
-
-#: Settings
-msgctxt "#32106"
 msgid "Enable advanced Harmony hub control"
 msgstr ""
 
 #: Settings
-msgctxt "#32107"
+msgctxt "#32105"
 msgid "Timeout (in seconds)"
 msgstr ""
 
@@ -67,17 +57,12 @@ msgstr ""
 
 #: Dialog Heading
 msgctxt "#32203"
-msgid "Choose activity"
+msgid "Enter Harmony activity"
 msgstr ""
 
 #: Dialog Heading
 msgctxt "#32204"
 msgid "Select mapping"
-msgstr ""
-
-#: Dialog Heading
-msgctxt "#32205"
-msgid "Choose service"
 msgstr ""
 
 #: Dialog

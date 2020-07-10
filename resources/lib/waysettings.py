@@ -8,6 +8,7 @@ SETTINGSLIST = [ {'name': 'mappings', 'default': ''},
                  {'name': 'harmonyadvanced', 'default': False},
                  {'name': 'use_custom_skin_menu', 'default': True},
                  {'name': 'include_skin_mods', 'default': True},
+                 {'name': 'version_upgrade', 'default': ''},
                  {'name': 'debug', 'default': False}
                ]
 
