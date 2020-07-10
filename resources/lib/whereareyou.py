@@ -136,7 +136,7 @@ class Main:
     def _parse_argv( self ):
         try:
             check_mapping = sys.argv[1]
-        except IndexErrror:
+        except IndexError:
             check_mapping = ''
         if check_mapping == 'domapping':
             self.DOMAPPING = True
