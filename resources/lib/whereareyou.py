@@ -57,7 +57,7 @@ class Main:
         self.SETTINGS = loadSettings()
         self.DIALOG = xbmcgui.Dialog()
         if self.SETTINGS['harmonycontrol']:
-            self.MYHUB = HubControl( self.SETTINGS['hub_ip'], thetimeout=self.SETTINGS['timeout'], debug=self.SETTINGS['debug'] )
+            self.MYHUB = HubControl( self.SETTINGS['hub_ip'], thetimeout=self.SETTINGS['timeout'] )
 
 
     def _get_mappings( self ):
@@ -168,13 +168,15 @@ class Main:
         if self.SETTINGS['hub_ip']:
             self.LW.log( ['the activity to run is: %s' % activity] )
             if activity:
-                result = self.MYHUB.startActivity( activity )
+                result, loglines = self.MYHUB.startActivity( activity )
+                self.LW.log( loglines )
                 self.LW.log( ['the result from the hub was:', result] )
             else:
                 self.LW.log( ['no activity to run'] )
             self.LW.log( ['the extra commands to run are: %s' % cmds] )
             if cmds:
-                result = self.MYHUB.runCommands( cmds )
+                result, loglines = self.MYHUB.runCommands( cmds )
+                self.LW.log( loglines )
                 self.LW.log( ['the result from the hub was:', result] )
             else:
                 self.LW.log( ['no extra commands to run'] )

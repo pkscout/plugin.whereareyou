@@ -1,7 +1,7 @@
+# 0.1.0
 
 import json, websocket
 from . import url
-from resources.lib.xlogger import Logger
 try:
     from kodi_six import xbmc
     MONITOR = xbmc.Monitor()
@@ -13,30 +13,30 @@ except:
 
 class HubControl:
 
-    def __init__( self, hub_ip, thetimeout=30, delay=0.25, debug=False ):
-        self.LW = Logger( preamble='[Harmony API]', logdebug=debug )
+    def __init__( self, hub_ip, thetimeout=30, delay=0.25 ):
+        self.HUBIP = hub_ip
         self.TIMEOUT = thetimeout
         self.DELAY = delay
         self.HUBID = ''
         self.CONFIG = {}
         self.COMMANDS = {}
-        self.HUBIP = hub_ip
+        self.LOGLINES = []
         self.WSURL = 'ws://%s:8088/?domain=svcs.myharmony.com&hubId=' % self.HUBIP
 
 
     def getActivities( self, excludes=None ):
         self._init_vars()
         activities = self._get_activities()
-        self.LW.log( ['the activities are:', activities] )
+        self.LOGLINES.extend( ['the activities are:', activities] )
         if excludes:
             for item in excludes:
                 del activities[item]
-        return activities
+        return activities, self.LOGLINES
 
 
     def runCommands( self, cmds_str ):
         self._init_vars()
-        self.LW.log( ['the commands passed in are: %s' % cmds_str] )
+        self.LOGLINES.extend( ['the commands passed in are: %s' % cmds_str] )
         results = []
         r_cmds = self._parse_cmds( cmds_str )
         for r_cmd in r_cmds:
@@ -56,15 +56,15 @@ class HubControl:
             cmd['timeout'] = self.TIMEOUT
             cmd['hbus'] = hub_cmd
             self._query_hub( cmd, buttonpress=True )
-        return results
+        return results, self.LOGLINES
 
 
     def startActivity( self, activity ):
         self._init_vars()
-        self.LW.log( ['the activity passed in is %s' % activity] )
+        self.LOGLINES.append( 'the activity passed in is %s' % activity )
         activities = self._get_activities()
         activity_id = activities.get( activity, {} ).get( 'id', '' )
-        self.LW.log( ['the activity id is %s' % activity_id] )
+        self.LOGLINES.append( 'the activity id is %s' % activity_id )
         if not activity_id:
             return None
         hub_cmd = {}
@@ -75,10 +75,12 @@ class HubControl:
         cmd['hubId'] = self.HUBID
         cmd['timeout'] = self.TIMEOUT
         cmd['hbus'] = hub_cmd
-        return self._query_hub( cmd )
+        result = self._query_hub( cmd ) 
+        return result, self.LOGLINES
 
 
     def _init_vars( self ):
+        self.LOGLINES = []
         self._get_config()
         self._get_commands()
 
@@ -90,7 +92,7 @@ class HubControl:
             theid = item.get( 'id' )
             if label and theid:
                 activities[label] = { 'activity':label, 'id':str( theid ) }
-                self.LW.log( ['added activity:', activities[label]] )
+                self.LOGLINES.append( 'added activity:', activities[label] )
         return activities
 
 
@@ -109,7 +111,7 @@ class HubControl:
                         break
                     all_cmds[cmd_name] = function.get( 'action', '' )
             self.COMMANDS[device_name] = all_cmds
-        self.LW.log( ['the complete list of commands by device is:', self.COMMANDS] )
+        self.LOGLINES.extend( ['the complete list of commands by device is:', self.COMMANDS] )
 
 
     def _get_config( self ):
@@ -134,15 +136,15 @@ class HubControl:
         jsonurl = url.URL( 'json', headers=headers )
         statuscode, loglines, res = jsonurl.Post(
                     'http://%s:8088' % self.HUBIP, data='{"id":29549457,"cmd":"setup.account?getProvisionInfo","timeout":90000}')
-        self.LW.log( loglines )
+        self.LOGLINES.extend( loglines )
         self.HUBID = str( res.get( 'data', {} ).get( 'activeRemoteId' ) )
-        self.LW.log( ['the hub id is %s' % self.HUBID] )
+        self.LOGLINES.append( ['the hub id is %s' % self.HUBID] )
 
 
     def _parse_cmds( self, cmds_str ):
         cmds = []
         r_cmds = cmds_str.split( '|' )
-        self.LW.log( ['using command list of:', r_cmds] )
+        self.LOGLINES.extend( ['using command list of:', r_cmds] )
         for r_cmd in r_cmds:
             item = r_cmd.split( ':' )
             try:
@@ -153,12 +155,12 @@ class HubControl:
                 button = ''
             cmd = self.COMMANDS.get( device, {} ).get( button, 'pause' )
             cmds.append( cmd )
-        self.LW.log( ['returning cmds of:', cmds] )
+        self.LOGLINES.extend( ['returning cmds of:', cmds] )
         return cmds
 
 
     def _query_hub( self, cmd, buttonpress=False ):
-        self.LW.log( ['the command is:', cmd] )
+        self.LOGLINES.extend( ['the command is:', cmd] )
         if not self.HUBID:
             self._get_hubid()
         ws = websocket.create_connection( self.WSURL + self.HUBID, timeout=self.TIMEOUT )
@@ -168,5 +170,4 @@ class HubControl:
         else:
             result = '{}'
         ws.close()
-        self.LW.log( ['the command result is:', result] )
         return json.loads( result )
