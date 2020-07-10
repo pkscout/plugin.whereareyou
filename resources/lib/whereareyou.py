@@ -155,7 +155,7 @@ class Main:
 
     def _pick_activity( self ):
         saved_mappings, json_mappings = self._get_mappings()
-        dialog_return, loglines = waydialog.Dialog().start( self.SETTINGS, title=self.SETTINGS['ADDONLANGUAGE']( 32203 ),
+        dialog_return, loglines = waydialog.Dialog().start( self.SETTINGS, title=self.SETTINGS['ADDONLANGUAGE']( 32205 ),
                                                            buttons=saved_mappings )
         self.LW.log( loglines )
         if dialog_return == None:

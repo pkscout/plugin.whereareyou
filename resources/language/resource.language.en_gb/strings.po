@@ -75,6 +75,11 @@ msgctxt "#32204"
 msgid "Select mapping"
 msgstr ""
 
+#: Dialog Heading
+msgctxt "#32205"
+msgid "Choose service"
+msgstr ""
+
 #: Dialog
 msgctxt "#32300"
 msgid "Add mapping"
