@@ -1,15 +1,17 @@
-<addon id="plugin.whereareyou" name="Where Are You" provider-name="pkscout" version="0.2.2~beta5">
+<addon id="plugin.whereareyou" name="Where Are You" provider-name="pkscout" version="0.3.0~beta1">
 	<requires>
 		<import addon="xbmc.python" version="2.26.0" />
 		<import addon="script.module.kodi-six" version="0.0.3" />
+		<import addon="script.module.requests" version="2.22.0" />
+		<import addon="script.module.websocket" version="0.5.7" />
 	</requires>
 	<extension library="default.py" point="xbmc.python.pluginsource">
 		<provides>executable</provides>
 	</extension>
 	<extension point="xbmc.addon.metadata">
 		<news>
-v.0.2.2~beta5
-- fix for looping dialog box if called from home screen
+v.0.3.0~beta1
+- added ability to control harmony hub
 		</news>
 		<assets>
 			<icon>icon.png</icon>

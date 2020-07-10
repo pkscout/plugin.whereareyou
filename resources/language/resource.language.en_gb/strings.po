@@ -30,6 +30,26 @@ msgctxt "#32103"
 msgid "Harmony hub IP address"
 msgstr ""
 
+#: Settings
+msgctxt "#32104"
+msgid "Use custom select menu"
+msgstr ""
+
+#: Settings
+msgctxt "#32105"
+msgid "Include skin mods"
+msgstr ""
+
+#: Settings
+msgctxt "#32106"
+msgid "Enable advanced Harmony hub control"
+msgstr ""
+
+#: Settings
+msgctxt "#32107"
+msgid "Timeout (in seconds)"
+msgstr ""
+
 #: Dialog Heading
 msgctxt "#32200"
 msgid "Select action"
@@ -42,12 +62,12 @@ msgstr ""
 
 #: Dialog Heading
 msgctxt "#32202"
-msgid "Select addon to launch"
+msgid "Additional commands to run"
 msgstr ""
 
 #: Dialog Heading
 msgctxt "#32203"
-msgid "Harmony activity to launch"
+msgid "Choose activity"
 msgstr ""
 
 #: Dialog Heading

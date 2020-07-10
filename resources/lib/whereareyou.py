@@ -1,8 +1,10 @@
-from kodi_six import xbmc, xbmcaddon, xbmcgui
+from kodi_six import xbmc, xbmcgui
 from kodi_six.utils import py2_decode
 import json, os, sys
+from resources.lib import waydialog
 from resources.lib.waysettings import loadSettings
 from resources.lib.xlogger import Logger
+from resources.lib.api.harmony import HubControl
 try:
     from urllib.parse import unquote_plus as _unquote_plus
 except ImportError:
@@ -18,8 +20,11 @@ class Main:
         self._parse_argv()
         if self.DOMAPPING:
             self._mappings_options()
+            self.SETTINGS['ADDON'].openSettings()
         elif self.TITLE and self.MESSAGE:
             self._display_dialog()
+        else:
+            self._pick_activity()
         self.LW.log( ['script stopped'], xbmc.LOGINFO )
 
 
@@ -36,43 +41,54 @@ class Main:
                 self.LW.log( ['checking for %s in %s' % (thematch, self.MESSAGE)] )
                 if thematch.lower() in self.TITLE.lower() or thematch.lower() in self.MESSAGE.lower():
                     self.LW.log( ['found match'] )
-                    activity = json_mappings.get( item, {} ).get( 'activity', '' )
-                    self.MESSAGE = '%s %s' % (self.MESSAGE, self.SETTINGS['ADDONLANGUAGE']( 32303 ))
+                    activity, cmds = self._get_mapping_details( json_mappings, item )
+                    self.MESSAGE = '%s\n%s' % (self.MESSAGE, self.SETTINGS['ADDONLANGUAGE']( 32303 ))
                     use_extended_dialog = True
                     break
         if use_extended_dialog:
             if self.DIALOG.yesno( self.TITLE, self.MESSAGE ):
-                pass
+                self._run_activity( activity, cmds )
         else:
             self.DIALOG.ok( self.TITLE, self.MESSAGE )
         xbmc.Player().play( os.path.join( self.SETTINGS['ADDONPATH'], 'resources', 'blank.mp4' ) )
 
 
-    def _get_addonlist( self ):
-        res = xbmc.executeJSONRPC (
-            '{ "jsonrpc": "2.0", "method": "Addons.GetAddons","params":{"type":"xbmc.addon.video"}, "id": "1"}' )
-        json_res = json.loads( res )
-        addons = json_res.get( 'result', {} ).get( 'addons', [] )
-        self.LW.log( ['the addons are:', addons] )
-        addonlist = []
-        for item in addons:
-            addon = item.get( 'addonid', '' )
-            if addon:
-                addonlist.append( addon )
-        addonlist.sort()
-        return addonlist
-
-
     def _init_vars( self ):
         self.SETTINGS = loadSettings()
         self.DIALOG = xbmcgui.Dialog()
+        if self.SETTINGS['harmonycontrol']:
+            self.MYHUB = HubControl( self.SETTINGS['hub_ip'], thetimeout=self.SETTINGS['timeout'], debug=self.SETTINGS['debug'] )
+
+
+    def _get_mappings( self ):
+        self.LW.log( ['the settings mappings are:', self.SETTINGS['mappings']] )
+        try:
+            json_mappings = json.loads( self.SETTINGS['mappings'] )
+        except ValueError:
+            json_mappings = {}
+        saved_mappings = []
+        for item in json_mappings:
+            mapping_name = json_mappings.get( item, {} ).get( 'match' )
+            if mapping_name:
+                saved_mappings.append( mapping_name )
+        saved_mappings.sort()
+        self.LW.log( ['returning saved mappings of:', saved_mappings, 'returning json mappings of:', json_mappings] )
+        return saved_mappings, json_mappings
+
+
+    def _get_mapping_details( self, json_mappings, item ):
+        activity = json_mappings.get( item, {} ).get( 'activity', '' )
+        if self.SETTINGS['harmonyadvanced']:
+            cmds = json_mappings.get( item, {} ).get( 'cmds', '' )
+        else:
+            cmds = ''
+        return activity, cmds
 
 
     def _mappings_options( self ):
         options = [ self.SETTINGS['ADDONLANGUAGE']( 32300 ) ]
-        if self.SETTINGS['mappings']:
-            options.append( self.SETTINGS['ADDONLANGUAGE']( 32301 ) )
-            options.append( self.SETTINGS['ADDONLANGUAGE']( 32302 ) )
+        options.append( self.SETTINGS['ADDONLANGUAGE']( 32301 ) )
+        options.append( self.SETTINGS['ADDONLANGUAGE']( 32302 ) )
         ret = self.DIALOG.select( self.SETTINGS['ADDONLANGUAGE']( 32200 ), options )
         self.LW.log( ['got back %s from the dialog box' % str( ret )] )
         if ret == -1:
@@ -85,32 +101,25 @@ class Main:
             self._option_edit( dodelete=True )
 
 
-    def _option_add( self, default_match='', default_activity='' ):
+    def _option_add( self, default_match='', default_activity='', default_cmds='' ):
         thematch = self.DIALOG.input( self.SETTINGS['ADDONLANGUAGE']( 32201 ), defaultt=default_match )
         if not thematch:
             return
         activity = self.DIALOG.input( self.SETTINGS['ADDONLANGUAGE']( 32203 ), defaultt=default_activity )
-        try:
-            json_mappings = json.loads( self.SETTINGS['mappings'] )
-        except ValueError:
-            json_mappings = {}
-        json_mappings[thematch] = {'match':thematch,'activity':activity}
+        if self.SETTINGS['harmonyadvanced']:
+            cmds = self.DIALOG.input( self.SETTINGS['ADDONLANGUAGE']( 32202 ), defaultt=default_cmds )
+        else:
+            cmds = ''
+        saved_mappings, json_mappings = self._get_mappings()
+        json_mappings[thematch] = {'match':thematch, 'activity':activity, 'cmds':cmds}
         self.SETTINGS['ADDON'].setSetting( 'mappings', json.dumps( json_mappings ) )
 
 
     def _option_edit( self, dodelete=False ):
-        self.LW.log( [self.SETTINGS['mappings']] )
-        try:
-            json_mappings = json.loads( self.SETTINGS['mappings'] )
-        except ValueError:
+        saved_mappings, json_mappings = self._get_mappings()
+        if not json_mappings:
             self._option_add()
             return
-        saved_mappings = []
-        for item in json_mappings:
-            mapping_name = json_mappings.get( item, {} ).get( 'match', '' )
-            if mapping_name:
-                saved_mappings.append( mapping_name )
-        saved_mappings.sort()
         ret = self.DIALOG.select( self.SETTINGS['ADDONLANGUAGE']( 32204 ), saved_mappings )
         if ret == -1:
             return
@@ -120,7 +129,9 @@ class Main:
         else:
             thematch = json_mappings.get( saved_mappings[ret], {} ).get( 'match', '' )
             activity = json_mappings.get( saved_mappings[ret], {} ).get( 'activity', '' )
-            self._option_add( default_match=thematch, default_activity=activity )
+            cmds = json_mappings.get( saved_mappings[ret], {} ).get( 'cmds', '' )
+            self._option_add( default_match=thematch, default_activity=activity, default_cmds=cmds )
+
 
     def _parse_argv( self ):
         if sys.argv[1] == 'domapping':
@@ -138,3 +149,30 @@ class Main:
         self.MESSAGE = py2_decode( _unquote_plus( params.get( 'message', '') ) )
 
 
+    def _pick_activity( self ):
+        saved_mappings, json_mappings = self._get_mappings()
+        dialog_return, loglines = waydialog.Dialog().start( self.SETTINGS, title=self.SETTINGS['ADDONLANGUAGE']( 32203 ),
+                                                           buttons=saved_mappings )
+        self.LW.log( loglines )
+        if dialog_return == None:
+            return
+        activity, cmds = self._get_mapping_details( json_mappings, saved_mappings[dialog_return] )
+        self._run_activity( activity, cmds )
+
+
+    def _run_activity( self, activity, cmds ):
+        if self.SETTINGS['hub_ip']:
+            self.LW.log( ['the activity to run is: %s' % activity] )
+            if activity:
+                result = self.MYHUB.startActivity( activity )
+                self.LW.log( ['the result from the hub was:', result] )
+            else:
+                self.LW.log( ['no activity to run'] )
+            self.LW.log( ['the extra commands to run are: %s' % cmds] )
+            if cmds:
+                result = self.MYHUB.runCommands( cmds )
+                self.LW.log( ['the result from the hub was:', result] )
+            else:
+                self.LW.log( ['no extra commands to run'] )
+        else:
+            self.LW.log( ['no hub IP address in settings'], xbmc.LOGWARNING )
