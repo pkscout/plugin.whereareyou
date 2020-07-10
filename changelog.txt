@@ -1,3 +1,9 @@
+v.0.3.0~beta2
+- pulled out code for selecting Harmony Hub action (moved to new script addon)
+
+v.0.3.0~beta1
+- added ability to open external apps using Harmony Hub
+
 v.0.2.2~beta2
 - fix for looping dialog box if called from home window
 
