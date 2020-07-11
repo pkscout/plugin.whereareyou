@@ -1,3 +1,9 @@
+v.0.3.0~beta4
+- fix for Harmony mappings that might have extraneous spaces at the beginning or end
+
+v.0.3.0~beta3
+- for Leia changed log level for a couple things to LOGNOTICE so they show up in the non-debug log
+
 v.0.3.0~beta2
 - pulled out code for selecting Harmony Hub action (moved to new script addon)
 
