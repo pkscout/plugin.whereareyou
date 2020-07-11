@@ -1,20 +1,6 @@
-v.0.3.0~beta4
-- fix for Harmony mappings that might have extraneous spaces at the beginning or end
-
-v.0.3.0~beta3
-- for Leia changed log level for a couple things to LOGNOTICE so they show up in the non-debug log
-
-v.0.3.0~beta2
-- pulled out code for selecting Harmony Hub action (moved to new script addon)
-
-v.0.3.0~beta1
+v.0.3.1
 - added ability to open external apps using Harmony Hub
-
-v.0.2.2~beta2
 - fix for looping dialog box if called from home window
-
-v.0.2.2~beta1
-- code refactoring
 
 v.0.2.1
 - version bump for resubmission to repo-plugins
