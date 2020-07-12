@@ -40,6 +40,12 @@ msgctxt "#32105"
 msgid "Timeout (in seconds)"
 msgstr ""
 
+#: Settings
+msgctxt "#32106"
+msgid "Delay between remote commands (in milliseconds)"
+msgstr ""
+
+
 #: Dialog Heading
 msgctxt "#32200"
 msgid "Select action"
