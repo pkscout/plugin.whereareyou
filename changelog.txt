@@ -1,4 +1,4 @@
-v.0.3.1
+v.0.3.2
 - added ability to open external apps using Harmony Hub
 - fix for looping dialog box if called from home window
 

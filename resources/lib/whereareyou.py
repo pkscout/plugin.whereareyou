@@ -61,7 +61,7 @@ class Main:
         self.SETTINGS = loadSettings()
         self.DIALOG = xbmcgui.Dialog()
         if self.SETTINGS['harmonycontrol']:
-            self.MYHUB = HubControl( self.SETTINGS['hub_ip'], thetimeout=self.SETTINGS['timeout'] )
+            self.MYHUB = HubControl( self.SETTINGS['hub_ip'], thetimeout=self.SETTINGS['timeout'], delay=self.SETTINGS['delay'] )
 
 
     def _get_mappings( self ):
