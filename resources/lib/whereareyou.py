@@ -32,7 +32,7 @@ class Main:
         self._parse_argv()
         if self.TITLE and self.MESSAGE:
             self._display_dialog()
-        elif self.SETTINGS['externalcontrol']:
+        elif self.SETTINGS['harmonycontrol']:
             self._mappings_options()
             if self.FROMSETTINGS:
                 self.SETTINGS['ADDON'].openSettings()
@@ -44,7 +44,7 @@ class Main:
             json_mappings = json.loads(self.SETTINGS['mappings'])
         except ValueError:
             json_mappings = {}
-        if json_mappings and self.SETTINGS['externalcontrol']:
+        if json_mappings and self.SETTINGS['harmonycontrol']:
             for item in json_mappings:
                 thematch = json_mappings.get(item, {}).get('match', '')
                 self.LW.log(['checking for %s in %s' % (thematch, self.TITLE)])
@@ -72,15 +72,19 @@ class Main:
     def _init_vars(self):
         self.SETTINGS = loadSettings()
         self.DIALOG = xbmcgui.Dialog()
-        if self.SETTINGS['externalcontrol']:
+        if self.SETTINGS['harmonycontrol']:
             if self.SETTINGS['controltype'] == 1:
+                if self.SETTINGS['ha_secure']:
+                    conntype = 'https'
+                else:
+                    conntype = 'http'
                 headers = {}
                 headers['Content-Type'] = 'application/json'
                 headers['Accept'] = 'application/json'
                 headers['Authorization'] = 'Bearer %s' % self.SETTINGS['ha_token']
                 self.JSONURL = URL('json', headers=headers)
-                self.RESTURL = 'http://%s:%s/api/services' % (
-                    self.SETTINGS['hub_ip'], self.SETTINGS['hub_port'])
+                self.RESTURL = '%s://%s:%s/api/services' % (
+                    conntype, self.SETTINGS['hub_ip'], self.SETTINGS['hub_port'])
             elif self.SETTINGS['controltype'] == 2:
                 self.MYHUB = HubControl(
                     self.SETTINGS['hub_ip'], thetimeout=self.SETTINGS['timeout'], delay=self.SETTINGS['delay'])
@@ -147,28 +151,32 @@ class Main:
         if not thematch:
             return
         cmds = ''
+        activity_list = []
         if self.SETTINGS['controltype'] == 1:
             activity_list = self._get_hascripts()
-            if activity_list:
-                try:
-                    default_index = activity_list.index(default_activity)
-                except ValueError:
-                    default_index = -1
-                ret = self.DIALOG.select(
-                    self.SETTINGS['ADDONLANGUAGE'](32203), activity_list, 0, default_index)
-                if ret == -1:
-                    return
-                else:
-                    activity = activity_list[ret]
-            else:
-                activity = self.DIALOG.input(
-                    self.SETTINGS['ADDONLANGUAGE'](32203), defaultt=default_activity)
         elif self.SETTINGS['controltype'] == 2:
+            activities, loglines = self.MYHUB.getActivities()
+            self.LW.log(loglines)
+            for activity_key in activities:
+                activity_list.append(activity_key)
+            activity_list.sort()
+        if activity_list:
+            try:
+                default_index = activity_list.index(default_activity)
+            except ValueError:
+                default_index = -1
+            ret = self.DIALOG.select(
+                self.SETTINGS['ADDONLANGUAGE'](32203), activity_list, 0, default_index)
+            if ret == -1:
+                return
+            else:
+                activity = activity_list[ret]
+        else:
             activity = self.DIALOG.input(
                 self.SETTINGS['ADDONLANGUAGE'](32203), defaultt=default_activity)
-            if self.SETTINGS['harmonyadvanced']:
-                cmds = self.DIALOG.input(
-                    self.SETTINGS['ADDONLANGUAGE'](32202), defaultt=default_cmds)
+        if self.SETTINGS['controltype'] == 2 and self.SETTINGS['harmonyadvanced']:
+            cmds = self.DIALOG.input(
+                self.SETTINGS['ADDONLANGUAGE'](32202), defaultt=default_cmds)
         saved_mappings, json_mappings = self._get_mappings()
         json_mappings[thematch] = {'match': thematch,
                                    'activity': activity, 'cmds': cmds}
