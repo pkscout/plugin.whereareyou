@@ -1,7 +1,7 @@
 v.0.5.1
 - settings fixes for better backwards compatibility
 - changed IP entry in settings to string to allow for domain name
-- added settings option to enable SSL
+- added settings option to enable SSL (HA only)
 - Harmony Hub option now shows list of activites from which to pick
 
 v.0.5.0
