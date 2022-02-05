@@ -1,11 +1,13 @@
-from kodi_six import xbmc, xbmcgui, xbmcplugin
-from kodi_six.utils import py2_decode
+import xbmc
+import xbmcgui
+import xbmcplugin
 import json
 import os
 import sys
 from resources.lib.waysettings import loadSettings
 from resources.lib.xlogger import Logger
 from resources.lib.api.harmony import HubControl
+from resources.lib.api.url import URL
 try:
     from urllib.parse import unquote_plus as _unquote_plus
 except ImportError:
@@ -30,7 +32,7 @@ class Main:
         self._parse_argv()
         if self.TITLE and self.MESSAGE:
             self._display_dialog()
-        elif self.SETTINGS['harmonycontrol']:
+        elif self.SETTINGS['externalcontrol']:
             self._mappings_options()
             if self.FROMSETTINGS:
                 self.SETTINGS['ADDON'].openSettings()
@@ -42,7 +44,7 @@ class Main:
             json_mappings = json.loads(self.SETTINGS['mappings'])
         except ValueError:
             json_mappings = {}
-        if json_mappings and self.SETTINGS['harmonycontrol']:
+        if json_mappings and self.SETTINGS['externalcontrol']:
             for item in json_mappings:
                 thematch = json_mappings.get(item, {}).get('match', '')
                 self.LW.log(['checking for %s in %s' % (thematch, self.TITLE)])
@@ -70,9 +72,34 @@ class Main:
     def _init_vars(self):
         self.SETTINGS = loadSettings()
         self.DIALOG = xbmcgui.Dialog()
-        if self.SETTINGS['harmonycontrol']:
-            self.MYHUB = HubControl(
-                self.SETTINGS['hub_ip'], thetimeout=self.SETTINGS['timeout'], delay=self.SETTINGS['delay'])
+        if self.SETTINGS['externalcontrol']:
+            if self.SETTINGS['controltype'] == 1:
+                headers = {}
+                headers['Content-Type'] = 'application/json'
+                headers['Accept'] = 'application/json'
+                headers['Authorization'] = 'Bearer %s' % self.SETTINGS['ha_token']
+                self.JSONURL = URL('json', headers=headers)
+                self.RESTURL = 'http://%s:%s/api/services' % (
+                    self.SETTINGS['hub_ip'], self.SETTINGS['hub_port'])
+            elif self.SETTINGS['controltype'] == 2:
+                self.MYHUB = HubControl(
+                    self.SETTINGS['hub_ip'], thetimeout=self.SETTINGS['timeout'], delay=self.SETTINGS['delay'])
+
+    def _get_hascripts(self):
+        script_list = []
+        status, loglines, results = self.JSONURL.Get(self.RESTURL)
+        self.LW.log(loglines)
+        for domain in results:
+            self.LW.log(['checking domain %s' % domain["domain"]])
+            if domain["domain"] == 'script':
+                for script_name in domain["services"]:
+                    self.LW.log(['checking script %s' % script_name])
+                    if not script_name in {'reload', 'turn_on', 'turn_off', 'toggle'}:
+                        self.LW.log(['saving script'])
+                        script_list.append(script_name)
+                break
+        script_list.sort()
+        return script_list
 
     def _get_mappings(self):
         self.LW.log(['the settings mappings are:', self.SETTINGS['mappings']])
@@ -92,7 +119,7 @@ class Main:
 
     def _get_mapping_details(self, json_mappings, item):
         activity = json_mappings.get(item, {}).get('activity', '')
-        if self.SETTINGS['harmonyadvanced']:
+        if self.SETTINGS['harmonyadvanced'] and self.SETTINGS['controltype'] == 2:
             cmds = json_mappings.get(item, {}).get('cmds', '')
         else:
             cmds = ''
@@ -119,13 +146,25 @@ class Main:
             self.SETTINGS['ADDONLANGUAGE'](32201), defaultt=default_match)
         if not thematch:
             return
-        activity = self.DIALOG.input(
-            self.SETTINGS['ADDONLANGUAGE'](32203), defaultt=default_activity)
-        if self.SETTINGS['harmonyadvanced']:
-            cmds = self.DIALOG.input(
-                self.SETTINGS['ADDONLANGUAGE'](32202), defaultt=default_cmds)
-        else:
-            cmds = ''
+        cmds = ''
+        if self.SETTINGS['controltype'] == 1:
+            activity_list = self._get_hascripts()
+            if activity_list:
+                ret = self.DIALOG.select(
+                    self.SETTINGS['ADDONLANGUAGE'](32203), activity_list, 0, activity_list.index(default_activity))
+                if ret == -1:
+                    return
+                else:
+                    activity = activity_list[ret]
+            else:
+                activity = self.DIALOG.input(
+                    self.SETTINGS['ADDONLANGUAGE'](32203), defaultt=default_activity)
+        elif self.SETTINGS['controltype'] == 2:
+            activity = self.DIALOG.input(
+                self.SETTINGS['ADDONLANGUAGE'](32203), defaultt=default_activity)
+            if self.SETTINGS['harmonyadvanced']:
+                cmds = self.DIALOG.input(
+                    self.SETTINGS['ADDONLANGUAGE'](32202), defaultt=default_cmds)
         saved_mappings, json_mappings = self._get_mappings()
         json_mappings[thematch] = {'match': thematch,
                                    'activity': activity, 'cmds': cmds}
@@ -172,11 +211,19 @@ class Main:
         except Exception as e:
             self.LW.log(['no arguments found: %s' % e])
             params = {}
-        self.TITLE = py2_decode(_unquote_plus(params.get('title', '')))
-        self.MESSAGE = py2_decode(_unquote_plus(params.get('message', '')))
+        self.TITLE = _unquote_plus(params.get('title', ''))
+        self.MESSAGE = _unquote_plus(params.get('message', ''))
 
     def _run_activity(self, activity, cmds):
-        if self.SETTINGS['hub_ip']:
+        if self.SETTINGS['controltype'] == 1:
+            self.LW.log(['the HA script to run is: %s' % activity])
+            if activity:
+                payload = {"entity_id": "script.%s" % activity}
+                theurl = self.RESTURL + '/script/' + activity
+                status, loglines, results = self.JSONURL.Post(
+                    theurl, data=json.dumps(payload))
+                self.LW.log(loglines)
+        elif self.SETTINGS['controltype'] == 2:
             self.LW.log(['the activity to run is: %s' % activity])
             if activity:
                 result, loglines = self.MYHUB.startActivity(activity)

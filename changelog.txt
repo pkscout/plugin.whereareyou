@@ -1,3 +1,6 @@
+v.0.5.0
+- added option to use Home Assistant script to launch external app
+
 v.0.4.3
 - fix for crash if using Harmony Hub Control with an activity
 
