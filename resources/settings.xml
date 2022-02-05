@@ -40,11 +40,11 @@
 				</setting>
 				<setting id="controltype" type="integer" parent="externalcontrol" label="32107" help="">
 					<level>0</level>
-					<default>1</default>
+					<default>2</default>
 					<constraints>
 						<options>
-							<option label="Home Assistant">1</option>
-							<option label="Harmony Hub">2</option>
+							<option label="32110">1</option>
+							<option label="32111">2</option>
 						</options>
 					</constraints>
 					<dependencies>

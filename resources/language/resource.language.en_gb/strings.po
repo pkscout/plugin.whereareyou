@@ -60,6 +60,16 @@ msgctxt "#32109"
 msgid "HA Token"
 msgstr ""
 
+#: Settings
+msgctxt "#32110"
+msgid "Home Assistant"
+msgstr ""
+
+#: Settings
+msgctxt "#32111"
+msgid "Harmony Hub"
+msgstr ""
+
 #: Dialog Heading
 msgctxt "#32200"
 msgid "Select action"

@@ -3,7 +3,7 @@ from resources.lib.kodisettings import *
 
 SETTINGSLIST = [{'name': 'mappings', 'default': ''},
                 {'name': 'externalcontrol', 'default': False},
-                {'name': 'controltype', 'default': 1},
+                {'name': 'controltype', 'default': 2},
                 {'name': 'hub_ip', 'default': ''},
                 {'name': 'hub_port', 'default': '8123'},
                 {'name': 'ha_token', 'default': ''},
