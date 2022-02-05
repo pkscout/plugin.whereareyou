@@ -150,8 +150,12 @@ class Main:
         if self.SETTINGS['controltype'] == 1:
             activity_list = self._get_hascripts()
             if activity_list:
+                try:
+                    default_index = activity_list.index(default_activity)
+                except ValueError:
+                    default_index = -1
                 ret = self.DIALOG.select(
-                    self.SETTINGS['ADDONLANGUAGE'](32203), activity_list, 0, activity_list.index(default_activity))
+                    self.SETTINGS['ADDONLANGUAGE'](32203), activity_list, 0, default_index)
                 if ret == -1:
                     return
                 else:
