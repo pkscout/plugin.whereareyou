@@ -58,7 +58,9 @@ class Main:
                         self.MESSAGE, self.SETTINGS['ADDONLANGUAGE'](32303))
                     use_extended_dialog = True
                     break
-        if use_extended_dialog:
+        if use_extended_dialog and self.SETTINGS['bypassdialog']:
+            self._run_activity(activity, cmds)
+        elif use_extended_dialog:
             if self.DIALOG.yesno(self.TITLE, self.MESSAGE):
                 self._run_activity(activity, cmds)
         else:
