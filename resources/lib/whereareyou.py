@@ -125,8 +125,13 @@ class Main:
 
     def _get_mapping_details(self, json_mappings, item):
         activity = json_mappings.get(item, {}).get('activity', '')
-        if self.SETTINGS['harmonyadvanced'] and self.SETTINGS['controltype'] == 2:
-            cmds = json_mappings.get(item, {}).get('cmds', '')
+        if self.SETTINGS['harmonyadvanced']:
+            if self.SETTINGS['controltype'] == 2:
+                cmds = json_mappings.get(item, {}).get('cmds', '')
+            else:
+                cmds = self.THEURL
+                if cmds:
+                    activity = 'launch_streaming_video'
         else:
             cmds = ''
         return activity, cmds
@@ -227,13 +232,17 @@ class Main:
             params = {}
         self.TITLE = _unquote_plus(params.get('title', ''))
         self.MESSAGE = _unquote_plus(params.get('message', ''))
+        self.THEURL = params.get('the_url')
 
     def _run_activity(self, activity, cmds):
         if self.SETTINGS['controltype'] == 1:
             self.LW.log(['the HA script to run is: %s' % activity])
+            self.LW.log(['with the video URL of: %s' % cmds])
             if activity:
                 payload = {"entity_id": "script.%s" % activity}
-                theurl = self.RESTURL + '/script/' + activity
+                if cmds:
+                    payload['variables'] = {"the_url": cmds}
+                theurl = '%s/script/turn_on' % self.RESTURL
                 status, loglines, results = self.JSONURL.Post(
                     theurl, data=json.dumps(payload))
                 self.LW.log(loglines)

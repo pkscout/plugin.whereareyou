@@ -10,6 +10,7 @@
 	<extension point="xbmc.addon.metadata">
 		<news>v.0.6.0
 - added option to bypass dialog asking if you want to launch the streaming service
+- if using HA control and an AppleTV, can pass video URL to launch episode/movie directly
 		</news>
 		<assets>
 			<icon>icon.png</icon>
