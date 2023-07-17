@@ -125,13 +125,11 @@ class Main:
 
     def _get_mapping_details(self, json_mappings, item):
         activity = json_mappings.get(item, {}).get('activity', '')
-        if self.SETTINGS['harmonyadvanced']:
-            if self.SETTINGS['controltype'] == 2:
-                cmds = json_mappings.get(item, {}).get('cmds', '')
-            else:
-                cmds = self.THEURL
-                if cmds:
-                    activity = 'launch_streaming_video'
+        if self.SETTINGS['harmonyadvanced'] and self.SETTINGS['controltype'] == 2:
+            cmds = json_mappings.get(item, {}).get('cmds', '')
+        elif self.THEURL and self.SETTINGS['controltype'] == 1:
+            cmds = self.THEURL
+            activity = 'launch_streaming_video'
         else:
             cmds = ''
         return activity, cmds
@@ -233,6 +231,7 @@ class Main:
         self.TITLE = _unquote_plus(params.get('title', ''))
         self.MESSAGE = _unquote_plus(params.get('message', ''))
         self.THEURL = params.get('the_url')
+        self.LW.log(['the full set of arguments is: %s' % sys.argv[2]])
 
     def _run_activity(self, activity, cmds):
         if self.SETTINGS['controltype'] == 1:
