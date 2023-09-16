@@ -10,8 +10,10 @@ from resources.lib.api.harmony import HubControl
 from resources.lib.api.url import URL
 try:
     from urllib.parse import unquote_plus as _unquote_plus
+    from urllib.parse import unquote as _unquote
 except ImportError:
     from urllib import unquote_plus as _unquote_plus
+    from urllib import unquote as _unquote
 
 
 def _upgrade():
@@ -230,7 +232,7 @@ class Main:
             params = {}
         self.TITLE = _unquote_plus(params.get('title', ''))
         self.MESSAGE = _unquote_plus(params.get('message', ''))
-        self.THEURL = params.get('the_url')
+        self.THEURL = _unquote(params.get('the_url'))
         self.LW.log(['the full set of arguments is: %s' % sys.argv[2]])
 
     def _run_activity(self, activity, cmds):
