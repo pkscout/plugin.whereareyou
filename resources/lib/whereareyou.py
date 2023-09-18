@@ -232,7 +232,7 @@ class Main:
             params = {}
         self.TITLE = _unquote_plus(params.get('title', ''))
         self.MESSAGE = _unquote_plus(params.get('message', ''))
-        self.THEURL = _unquote(params.get('the_url'))
+        self.THEURL = _unquote(params.get('the_url', ''))
         self.LW.log(['the full set of arguments is: %s' % sys.argv[2]])
 
     def _run_activity(self, activity, cmds):
