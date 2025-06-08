@@ -8,7 +8,9 @@
 		<provides>executable</provides>
 	</extension>
 	<extension point="xbmc.addon.metadata">
-		<news>v.0.6.1
+    	<reuselanguageinvoker>true</reuselanguageinvoker>
+		<news>v.0.6.2
+- internal change to speed up subsequent launches
 - added option to bypass dialog asking if you want to launch the streaming service
 - if using HA control and an AppleTV, can pass video URL to launch episode/movie directly
 		</news>
