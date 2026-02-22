@@ -1,5 +1,6 @@
 v.0.6.2
 - internal change to speed up subsequent launches
+- fix to allow unverified SSL certs
 
 v.0.6.1
 - accept URL encoded URL and decode it before passing to Home Assistant
